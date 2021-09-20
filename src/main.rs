@@ -1,6 +1,6 @@
 #![allow(unused)]
 
-// плотно упакованная структура
+// плотно упакованная структура?
 //#[repr(packed(1))]
 struct Point {
     x: i32,
@@ -25,7 +25,7 @@ struct ArrayOfPoints {
 //
 use std::mem;
 
-fn anal_slice(slice: &[i32]) {
+fn anal_slice(slice: &[u32]) {
     println!("first: {}", slice[0]);
     println!("len: {}", slice.len());
 }
@@ -57,11 +57,22 @@ use std::fmt::Debug;
 //use Packed as Aligned;
 //type Aligned = Packed;
 struct PointTuple(f32, f32);
-//let p = Point
 struct Cookie;
+
+enum Event {
+    None,
+    One,
+    Two,
+    Three,
+    Point,
+}
+
+fn check_event(event: &Event) {
+}
+
 fn main() {
     // безымянная структура??
-    Point { x: 10, y: 10 };
+    //Point { x: 10, y: 10 };
     let p = Point::new();
     println!("size of Point is {}", mem::size_of_val(&p));
 /*
@@ -72,4 +83,7 @@ fn main() {
  *
  *    println!("Hello, world!");
  */
+    let arr: [u32; 1000] = [0; 1000];
+    anal_slice(&arr[1..2]);
+    anal_slice(&arr);
 }
