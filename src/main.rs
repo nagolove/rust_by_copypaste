@@ -23,6 +23,11 @@ const PROT_EXEC: i32 = 0x4;
 const MAP_ANONYMOUS: i32 = 0x20; /* Don't use a file.  */
 const MAP_PRIVATE: i32 = 0x02;  /* Changes are private.  */
 
+/*
+Создать указатель на фунцию по заданному адресу.
+Вызвать фунцию.
+ */
+
 fn main() {
 
     unsafe {
