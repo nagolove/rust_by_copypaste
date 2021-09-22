@@ -36,18 +36,27 @@ fn main() {
         let prot = PROT_READ | PROT_WRITE | PROT_EXEC;
         println!("errno {}", errno::errno());
         println!("addr {:?}", addr);
-        let p: *mut i32 = mmap(addr, size, prot, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0) as *mut i32;
+        let p: *mut i8 = mmap(addr, size, prot, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0) as *mut i8;
         println!("errno {}", errno::errno());
         // хочу делать вот так
         //*p[1] = 0;
-        let slice = slice::from_raw_parts_mut(p, 10);
+        //let slice8 = slice::from_raw_parts_mut(p, size);
+        let slice64 = slice::from_raw_parts_mut(p as *mut i64, size / (64 / 8));
         println!("mmap returned {:?}", p);
         //let j = 1;
-        for i in 1 .. size {
+        //for i in 1 .. size {
+        for i in 1 .. size - 8 {
             //slice[i] = 1;
-            slice[i] = 1;
+            slice64[i] = 1;
+            slice64[i + 1] = 1;
+            slice64[i + 2] = 1;
+            slice64[i + 3] = 1;
+            slice64[i + 4] = 1;
+            slice64[i + 5] = 1;
+            slice64[i + 6] = 1;
+            slice64[i + 7] = 1;
         }
-        println!("v {}", slice[1]);
+        println!("v {}", slice64[1]);
         // Как обратиться к памяти выделенной на указатель p по индексу?
     }
 
