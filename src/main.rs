@@ -62,8 +62,8 @@ fn test_recurse() {
 fn memory_alloc() {
     unsafe {
         let addr: *mut c_void = ptr::null_mut();
-        //let size = 1024 * 1024 * 1024 * 33; // количество выделенных байт
-        let size = 1024 * 1024 * 1024 * 2; // количество выделенных байт
+        let size = 1024 * 1024 * 1024 * 33; // количество выделенных байт
+        //let size = 1024 * 1024 * 1024 * 2; // количество выделенных байт
         let prot = PROT_READ | PROT_WRITE | PROT_EXEC;
         println!("errno {}", errno::errno());
         println!("addr {:?}", addr);
@@ -92,9 +92,37 @@ fn memory_alloc() {
     }
 }
 
+use std::process::Command;
+fn run_fasm() {
+    /*
+     *let output = if cfg!(target_os = "windows") {
+     *    //Command::new("cmd").arg
+     *} else {
+     *    Command::new("fasm")
+     *        .arg("")
+     *        .arg("").output().expect("failed");
+     *};
+     */
+    let output = Command::new("fasm")
+        .arg("")
+        .arg("").output().expect("failed");
+    //let buf = output.stdout;
+    //let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
+    //let hello = String::from_utf8_lossy(&output.stdout);
+    //print!("{}", s);
+
+    use std::fs::File;
+    use std::io::Write;
+    let mut file = File::create("out.txt").unwrap();
+    //write!(&mut file, "hello\n");
+    //file.write_all(buf.to_vec());
+    file.write_all(&output.stdout);
+}
+
 fn main() {
     //test_recurse();
-    memory_alloc();
+    //memory_alloc();
+    run_fasm();
 
     // wait for input
     //let mut guess = String::new();
@@ -102,5 +130,5 @@ fn main() {
 
     //foo(300_000);
     //foo(10_000);
-    println!("hello");
+    //println!("hello");
 }
