@@ -63,7 +63,7 @@ fn memory_alloc() {
     unsafe {
         let addr: *mut c_void = ptr::null_mut();
         let size = 1024 * 1024 * 1024 * 33; // количество выделенных байт
-        //let size = 1024 * 1024 * 1024 * 2; // количество выделенных байт
+                                            //let size = 1024 * 1024 * 1024 * 2; // количество выделенных байт
         let prot = PROT_READ | PROT_WRITE | PROT_EXEC;
         println!("errno {}", errno::errno());
         println!("addr {:?}", addr);
@@ -92,7 +92,45 @@ fn memory_alloc() {
     }
 }
 
+fn wr2file(data: Vec<u8>) {
+
+    use std::fs::File;
+    use std::io::Write;
+    let mut file = File::create("out.txt").unwrap();
+    //write!(&mut file, "hello\n");
+//file.write_all(&buf.to_vec());
+//file.write_all(&output.stdout);
+//let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
+//file.write_all(&output.stdout);
+
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+//file.write_all(&output.stdout);
+}
+
 use std::process::Command;
+fn print_command_stdout(cmd: &str) {
+    let output = Command::new(cmd)
+        .arg("")
+        .arg("")
+        .output()
+        .expect("failed");
+    //let buf = output.stdout;
+    //let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
+    let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
+    print!("stdout {:?}", s);
+    let s = std::str::from_utf8(&output.stderr).expect("конвертация в строку сломалась");
+    print!("stderr {:?}", s);
+    //let hello = String::from_utf8_lossy(&output.stdout);
+}
+
 fn run_fasm() {
     /*
      *let output = if cfg!(target_os = "windows") {
@@ -103,26 +141,76 @@ fn run_fasm() {
      *        .arg("").output().expect("failed");
      *};
      */
-    let output = Command::new("fasm")
-        .arg("")
-        .arg("").output().expect("failed");
-    //let buf = output.stdout;
-    //let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
-    //let hello = String::from_utf8_lossy(&output.stdout);
-    //print!("{}", s);
+    //let b = output.stdout;
+    //let sout = std::process::ChildStdout;
+    println!("------------------");
+    print_command_stdout("fasm");
+    println!("------------------");
+    print_command_stdout("lsblk");
+    println!("------------------");
+    print_command_stdout("ls");
+    println!("------------------");
+}
 
-    use std::fs::File;
-    use std::io::Write;
-    let mut file = File::create("out.txt").unwrap();
-    //write!(&mut file, "hello\n");
-    //file.write_all(buf.to_vec());
-    file.write_all(&output.stdout);
+#[test]
+fn test_divide() {
+    match divide(5., 3.) {
+        Some(..) => println!("Some"),
+        None => println!("None"),
+        _ => println!("other") ,
+    }
+}
+
+fn divide(numerator: f64, denominator: f64) -> Option<f64> {
+    if denominator == 0.0 {
+        None
+    } else {
+        Some(numerator / denominator)
+    }
+}
+
+#[test]
+fn test_check_optional() {
+    let optional = None;
+    check_optional(optional);
+
+    // В чем разница между let и let mut?
+    let optional = Some(Box::new(10));
+    check_optional(optional);
+}
+
+fn check_optional(optional: Option<Box<i32>>) {
+    match optional {
+        Some(p) => println!("value is {}", p),
+        None => println!("value is none"),
+    }
+}
+
+fn test_external_command(cmd: &str) {
+    use std::process::{Command, Stdio};
+
+    let child = Command::new(cmd)
+        .spawn()
+        .expect("failed to execute child");
+
+    let output = child
+        .wait_with_output()
+        .expect("failed to wait on child");
+
+    println!("-------------------");
+    let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
+    println!("{}", s);
+    println!("-------------------");
 }
 
 fn main() {
+    test_external_command("fasm");
+    test_external_command("ls");
+    test_external_command("lsblk");
+
     //test_recurse();
     //memory_alloc();
-    run_fasm();
+    //run_fasm();
 
     // wait for input
     //let mut guess = String::new();
@@ -131,4 +219,21 @@ fn main() {
     //foo(300_000);
     //foo(10_000);
     //println!("hello");
+}
+
+// Heapless vector type
+struct ArrayVec<T, const N: usize> {
+    values: [Option<T>; N],
+    len: usize,
+}
+
+impl<T, const N: usize> ArrayVec<T, N> {
+    fn try_push(&mut self, t: T) -> Result<(), T> {
+        if self.len == N {
+            return Err(t);
+        }
+        self.values[self.len] = Some(t);
+        self.len += 1;
+        return Ok(());
+    }
 }
