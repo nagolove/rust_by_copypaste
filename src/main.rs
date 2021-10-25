@@ -237,3 +237,46 @@ impl<T, const N: usize> ArrayVec<T, N> {
         return Ok(());
     }
 }
+
+#[test]
+fn iterate_over_an_static_array_rev() {
+    let a = [1, -1, 1, -1, 0, 1, -1];
+    for i in a.iter().rev() {
+        println!("{}", i);
+    }
+}
+
+#[test]
+fn iterate_over_an_static_array() {
+    let a = [1, -1, 1, -1, 0, 1, -1];
+    for i in a {
+        println!("{}", i);
+    }
+}
+
+#[test]
+fn iterate_over_vector_rev() {
+    let v = vec![10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    for i in v.iter().rev() {
+        println!("{}", i);
+    }
+}
+
+#[test]
+fn iterate_over_vector() {
+    let v = vec![10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    for i in v {
+        println!("{}", i);
+    }
+}
+
+#[test]
+fn iterate_over_hashmap() {
+    use std::collections::*;
+    let mut hm: HashMap<&str, &str> = HashMap::new();
+    hm.insert("name", "den");
+    hm.insert("age", "30");
+    for (key, value) in hm {
+        println!("{} => {}", key, value);
+    }
+}
