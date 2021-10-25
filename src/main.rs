@@ -280,3 +280,15 @@ fn iterate_over_hashmap() {
         println!("{} => {}", key, value);
     }
 }
+
+#[test]
+fn iterate_over_hashmap_iter() {
+    //iter: Iterator;
+    use std::collections::*;
+    let mut hm: HashMap<&str, &str> = HashMap::new();
+    hm.insert("name", "den");
+    hm.insert("age", "30");
+    for (key, value) in hm {
+        println!("{} => {}", key, value);
+    }
+}
