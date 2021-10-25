@@ -186,10 +186,11 @@ fn check_optional(optional: Option<Box<i32>>) {
     }
 }
 
-fn test_external_command(cmd: &str) {
+fn external_command(cmd: &str) {
     use std::process::{Command, Stdio};
 
     let child = Command::new(cmd)
+        .arg("1.asm")
         .spawn()
         .expect("failed to execute child");
 
@@ -197,16 +198,14 @@ fn test_external_command(cmd: &str) {
         .wait_with_output()
         .expect("failed to wait on child");
 
-    println!("-------------------");
     let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
     println!("{}", s);
-    println!("-------------------");
 }
 
 fn main() {
-    test_external_command("fasm");
-    test_external_command("ls");
-    test_external_command("lsblk");
+    external_command("fasm");
+    //test_external_command("ls");
+    //test_external_command("lsblk");
 
     //test_recurse();
     //memory_alloc();
