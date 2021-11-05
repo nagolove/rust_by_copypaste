@@ -24,6 +24,29 @@ const PROT_EXEC: i32 = 0x4;
 const MAP_ANONYMOUS: i32 = 0x20; /* Don't use a file.  */
 const MAP_PRIVATE: i32 = 0x02; /* Changes are private.  */
 
+// Default representation, alignment lowered to 2.
+#[repr(packed(2))]
+struct PackedStruct {
+    first: i16,
+    second: i8,
+    third: i32
+}
+
+#[repr(packed(1))]
+struct PackedStruct2 {
+    first: i16,
+    second: i8,
+    third: i32
+}
+
+// C representation, alignment raised to 32
+#[repr(C, align(32))]
+struct AlignedStruct {
+    first: i16,
+    second: i8,
+    third: i32
+}
+
 /*
 Создать указатель на фунцию по заданному адресу.
 Вызвать фунцию.
@@ -92,7 +115,7 @@ fn memory_alloc() {
     }
 }
 
-fn wr2file(data: Vec<u8>) {
+fn wr2file(data: &Vec<u8>) {
 
     use std::fs::File;
     use std::io::Write;
@@ -103,53 +126,6 @@ fn wr2file(data: Vec<u8>) {
 //let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
 //file.write_all(&output.stdout);
 
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-//file.write_all(&output.stdout);
-}
-
-use std::process::Command;
-fn print_command_stdout(cmd: &str) {
-    let output = Command::new(cmd)
-        .arg("")
-        .arg("")
-        .output()
-        .expect("failed");
-    //let buf = output.stdout;
-    //let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
-    let s = std::str::from_utf8(&output.stdout).expect("конвертация в строку сломалась");
-    print!("stdout {:?}", s);
-    let s = std::str::from_utf8(&output.stderr).expect("конвертация в строку сломалась");
-    print!("stderr {:?}", s);
-    //let hello = String::from_utf8_lossy(&output.stdout);
-}
-
-fn run_fasm() {
-    /*
-     *let output = if cfg!(target_os = "windows") {
-     *    //Command::new("cmd").arg
-     *} else {
-     *    Command::new("fasm")
-     *        .arg("")
-     *        .arg("").output().expect("failed");
-     *};
-     */
-    //let b = output.stdout;
-    //let sout = std::process::ChildStdout;
-    println!("------------------");
-    print_command_stdout("fasm");
-    println!("------------------");
-    print_command_stdout("lsblk");
-    println!("------------------");
-    print_command_stdout("ls");
-    println!("------------------");
 }
 
 #[test]
@@ -186,11 +162,11 @@ fn check_optional(optional: Option<Box<i32>>) {
     }
 }
 
-fn external_command(cmd: &str) {
+fn external_command(cmd: &str, args: Vec<String>) {
     use std::process::{Command, Stdio};
 
     let child = Command::new(cmd)
-        .arg("1.asm")
+        .args(args)
         .spawn()
         .expect("failed to execute child");
 
@@ -203,7 +179,10 @@ fn external_command(cmd: &str) {
 }
 
 fn main() {
-    external_command("fasm");
+    // Как можно записать по-другому?
+    let args = vec![String::from("1.asm")];
+    external_command("fasm", args);
+
     //test_external_command("ls");
     //test_external_command("lsblk");
 
