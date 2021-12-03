@@ -29,4 +29,30 @@ impl Iterator for CustomIter {
     }
 }
 
-#[test] 
+use std::fmt;
+
+struct Wrapper(Vec<String>);
+
+impl fmt::Display for Wrapper {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "[{}]", self.0.join(", "))
+    }
+}
+
+#[cfg(test)]
+mod custom {
+    use super::*;
+
+    #[test]
+    fn wrapper_test() {
+        let w = Wrapper(
+            vec![String::from("hello"), String::from("world")]
+            );
+        println!("w = {}", w);
+    }
+
+}
+
+pub fn setup() {
+    // do nothing
+}

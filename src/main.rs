@@ -5,6 +5,8 @@ use errno;
 use std::ptr;
 use std::slice;
 
+mod custom;
+
 //#[warn(dead_code)]
 extern "C" {
     fn mmap(
@@ -182,6 +184,8 @@ fn main() {
     // Как можно записать по-другому?
     let args = vec![String::from("1.asm")];
     external_command("fasm", args);
+
+    custom::setup();
 
     //test_external_command("ls");
     //test_external_command("lsblk");
