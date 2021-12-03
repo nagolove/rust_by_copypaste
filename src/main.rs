@@ -180,6 +180,43 @@ fn external_command(cmd: &str, args: Vec<String>) {
     println!("{}", s);
 }
 
+mod lib;
+
+#[test]
+fn trait_impl_test() {
+    use lib::{Draw, Screen, Button};
+
+    struct SelectBox {
+        width: u32,
+        height: u32,
+        options: Vec<String>,
+    }
+
+    impl Draw for SelectBox {
+        fn draw(&self) {
+        }
+    }
+
+    let screen = Screen {
+        components: vec![
+            Box::new(SelectBox {
+                width: 100,
+                height: 1,
+                options: vec![
+                    String::from("yes"),
+                ]
+            }),
+            Box::new(Button {
+                width: 100,
+                height: 1,
+                label: String::from("yes"),
+            })
+        ]
+    };
+
+    screen.run();
+}
+
 fn main() {
     // Как можно записать по-другому?
     let args = vec![String::from("1.asm")];
