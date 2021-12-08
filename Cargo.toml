@@ -9,3 +9,5 @@ edition = "2018"
 
 [dependencies]
 errno="0.2.7"
+strum = "0.23"
+strum_macros = "0.23"

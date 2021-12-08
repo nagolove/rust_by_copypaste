@@ -4,7 +4,7 @@ struct CustomIter {
 }
 
 impl CustomIter {
-    fn new()-> Self {
+    fn new() -> Self {
         CustomIter {
             v: Vec::new(),
             counter: 0,
@@ -59,15 +59,99 @@ fn print_coords(&(x, y): &(i64, i64)) {
     //x = 1;
 }
 
+use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
+
+#[derive(EnumIter, Debug)]
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+impl Message {
+    fn some_function() {
+        println!("Hi");
+    }
+}
+
+enum Optione<T> {
+    Some(T),
+    None,
+}
+
 #[cfg(test)]
 mod custom {
     use super::*;
 
+    type Her = Option<i8>;
+
+    fn plus_one(x: Her) -> Her {
+        match x {
+            None => None,
+            Some(i) => Some(i + 1),
+        }
+    }
+
+    #[test]
+    fn plus_one_test() {
+        let one = Some(1);
+        let two = plus_one(one);
+        let none = plus_one(None);
+    }
+
+    #[test]
+    fn option_test_2() {
+        let some_number = Some(-1);
+        let some_string = Some("A string?");
+        let absent_value: Option<i64> = None;
+        let x: i8 = -1;
+        let y: Option<i8> = Some(4);
+
+        let sum = x + y.unwrap();
+        println!("sum = {}", sum);
+
+        let sum = x + y.unwrap_or(-1);
+        println!("sum = {}", sum);
+
+        let sum = x + y.unwrap_or_else(|| -10);
+        println!("sum = {}", sum);
+
+        //let sum = x + y;
+    }
+
+    #[test]
+    fn enum_with_data_test() {
+
+        //let m: Message = Message::Quit;
+        //let m: Message = Message::Move { x: 1, y: 1 };
+
+        for m in Message::iter() {
+            use Message::*;
+            match m {
+                Quit => println!("quit"),
+                Move { x, y } => println!("data is ({}, {})", x, y),
+                Write(text) => println!("write \"{}\"", text),
+                ChangeColor(r, g, b) => println!("color is ({}, {}, {})", r, g, b),
+                _ => println!("Any variant"),
+            }
+        }
+    }
+
+    #[test]
+    fn enum_impl_functioin_test() {
+        Message::some_function();
+    }
+
     #[test]
     fn enum_test() {
+        //m::Quit();
+        //m.some_function();
+
         enum IpAddrKind {
-            V4,
-            V6,
+            V4(u8, u8, u8, u8),
+            V6(String),
         }
         struct IpAddr {
             kind: IpAddrKind,
@@ -76,10 +160,7 @@ mod custom {
         let four = IpAddrKind::V4;
         let six = IpAddrKind::V6;
         //use IpAddrKind::*;
-        let localhost = IpAddr {
-            kind: IpAddrKind::V4,
-            address: String::from("127.0.0.1")
-        };
+        let localhost = IpAddrKind::V4(127, 0, 0, 1);
     }
 
     #[test]
@@ -87,7 +168,7 @@ mod custom {
         // always match
         let x = 1;
         //if let x = x {
-            //println!("{}", x);
+        //println!("{}", x);
         //}
 
         // not always match
@@ -176,9 +257,7 @@ mod custom {
 
     #[test]
     fn wrapper_test() {
-        let w = Wrapper(
-            vec![String::from("hello"), String::from("world")]
-            );
+        let w = Wrapper(vec![String::from("hello"), String::from("world")]);
         println!("w = {}", w);
     }
 
@@ -188,17 +267,17 @@ mod custom {
             panic!("паника");
         }
     }
-    
+
     #[test]
-    fn option_test() {
+    fn option_test_1() {
         let mut o: Option<u32> = Some(10);
         o = None;
         //let Option<bool> o;
         fn sub(n: i64) -> Option<bool> {
             if (n < 0) {
-                return Some(false)
+                return Some(false);
             } else {
-                return None
+                return None;
             }
         }
     }
