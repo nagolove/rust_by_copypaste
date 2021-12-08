@@ -64,6 +64,25 @@ mod custom {
     use super::*;
 
     #[test]
+    fn enum_test() {
+        enum IpAddrKind {
+            V4,
+            V6,
+        }
+        struct IpAddr {
+            kind: IpAddrKind,
+            address: String,
+        }
+        let four = IpAddrKind::V4;
+        let six = IpAddrKind::V6;
+        //use IpAddrKind::*;
+        let localhost = IpAddr {
+            kind: IpAddrKind::V4,
+            address: String::from("127.0.0.1")
+        };
+    }
+
+    #[test]
     fn irrefurable_or_not_test() {
         // always match
         let x = 1;
@@ -121,7 +140,7 @@ mod custom {
     }
 
     #[test]
-    fn enum_test() {
+    fn enum_match_test() {
         let language = Language::Russian;
         use Language::*;
         //use super::*;
