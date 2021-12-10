@@ -81,6 +81,7 @@ enum Optione<T> {
     None,
 }
 
+// зачем нужен следущий аттрибут?
 #[cfg(test)]
 mod custom {
     use super::*;
@@ -92,6 +93,55 @@ mod custom {
             None => None,
             Some(i) => Some(i + 1),
         }
+    }
+
+    use proc_macro;
+
+    use hello_macro::HelloMacro;
+    use hello_macro_derive::HelloMacro;
+
+    #[derive(HelloMacro)]
+    struct Pancake;
+
+    // This macro is not support trailing comma in declaration list. Why?
+    #[macro_export]
+    // Что такое macro_rules ??
+    macro_rules! MASSIV {
+        ( $( $v:expr ),* ) => {
+            {
+                let mut temp = Vec::new();
+                $(
+                    temp.push($v);
+                )*
+                temp
+            }
+        }; // Does this comma is necessary? And why?
+    }
+
+    #[test]
+    fn decl_macros_test() {
+        fn s() -> i32 {
+            //return 1;
+            1
+        };
+
+        let q = {
+            10
+        };
+        println!("q = {}", q);
+
+        let v1 = MASSIV![1, 2, 2];
+        let v2 = vec![vec![1, 2, 2], ];
+        let v3: Vec<char> = vec!['a', ];
+        let v4: Vec<&str> = vec!["a", ];
+        //let v5 = MASSIV![vec![1, 2, 2], ];
+        //let v6 = MASSIV![1, 2, 2, ];
+        //let v5: Vec<&String> = vec!["a", ];
+    }
+
+    #[test]
+    fn size_of_test() {
+        println!("size_of<char> = {}", std::mem::size_of::<char>());
     }
 
     #[test]
