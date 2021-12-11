@@ -118,6 +118,70 @@ mod custom {
     }
 
     #[test]
+    fn drop_test() {
+        struct CustomSmartPointer {
+            some_data: String,
+        }
+
+        impl Drop for CustomSmartPointer {
+            fn drop(&mut self) {
+                println!("Dropping CustomSmartPointer. some data = {}", self.some_data);
+            }
+        }
+
+        let c = CustomSmartPointer {
+            some_data: String::from("hi"),
+        };
+        let e = CustomSmartPointer {
+            some_data: String::from("bye"),
+        };
+        //c.drop();
+        drop(c);
+        drop(e);
+    }
+
+    #[test]
+    fn oop_test() {
+        pub struct AverageCollection {
+            list: Vec<u32>,
+            average: f64,
+        }
+
+        impl AverageCollection {
+            pub fn add(&mut self, value: u32) {
+                self.list.push(value);
+                self.update_average();
+            }
+
+            pub fn remove(&mut self) -> Option<u32> {
+                let result = self.list.pop();
+                match result {
+                    Some(value) => { 
+                        self.update_average();
+                        Some(value)
+                    }
+                    None => None,
+                }
+            }
+
+            // Почему и как работает если убрать значок ссылки в след строке?
+            pub fn average(&self) -> f64 {
+                self.average
+            }
+
+            fn update_average(&mut self) {
+                let total: u32 = self.list.iter().sum();
+                //self.average = total as f64 / self.list.len() as f64
+                self.average = total as f64 / self.list.len() as f64
+            }
+
+        }
+
+
+    }
+
+
+    #[test]
     fn decl_macros_test() {
         fn s() -> i32 {
             //return 1;

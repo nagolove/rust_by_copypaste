@@ -1,4 +1,6 @@
 /target
+hello_macro/target/
+hello_macro/hello_macro_derive/target/
 Cargo.lock
 nohup.out
 out.txt
