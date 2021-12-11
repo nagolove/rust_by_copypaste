@@ -95,13 +95,12 @@ mod custom {
         }
     }
 
-    use proc_macro;
+    //use proc_macro;
+    //use hello_macro::HelloMacro;
+    //use hello_macro_derive::HelloMacro;
 
-    use hello_macro::HelloMacro;
-    use hello_macro_derive::HelloMacro;
-
-    #[derive(HelloMacro)]
-    struct Pancake;
+    //#[derive(HelloMacro)]
+    //struct Pancake;
 
     // This macro is not support trailing comma in declaration list. Why?
     #[macro_export]
